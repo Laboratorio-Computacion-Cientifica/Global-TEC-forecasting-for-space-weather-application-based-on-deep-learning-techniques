@@ -7,7 +7,7 @@ from downloader.tec import tec_downloader as td
 from general_functions import date_functions
 
 # loop over the days of the year of interest
-_years = [2017] #[2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+_years = [2021] #[2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
 
 for _year in _years:
     _amountOfDaysOfTheYear = \

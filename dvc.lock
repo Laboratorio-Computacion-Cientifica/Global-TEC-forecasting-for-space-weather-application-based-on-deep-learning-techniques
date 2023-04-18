@@ -1,0 +1,334 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python project/prepare.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/tec/preprocessed_tec/
+      md5: 6ff3d809ddabe7c8071da0b906b409ee.dir
+      size: 5313715
+      nfiles: 12
+    - path: project/prepare.py
+      md5: 3e42c5fd739ade375a496051124e300c
+      size: 6233
+    - path: project/selector/kp/kp_selector.py
+      md5: dbc57af7145a81e09df93e3b999a50cc
+      size: 1728
+    - path: project/selector/tec/tec_selector.py
+      md5: 3c2327e5bc21962b58daabe40ec3e8ed
+      size: 3118
+    params:
+      params.yaml:
+        prepare.dateEnd: 20161231
+        prepare.dateInit: 20050101
+  train:
+    cmd: python project/train.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - path: data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      md5: 9ea4d54a94d119a3015c291365040205
+      size: 31234800
+    - path: data/prepared/station1_y_trainset_scaled_and_transformed.txt
+      md5: b9c4ffa67b032c22ee093baea04048ab
+      size: 15617400
+    params:
+      params.yaml:
+        train.activation1: tanh
+        train.activation2: tanh
+        train.epochs: 20
+        train.loss: mse
+        train.nFeatures: 2
+        train.optimizer: adam
+        train.validation: 0.1
+        train.verbose: 2
+  evaluate:
+    cmd: python project/evaluate.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+      data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - path: data/models/lstm_model_using_12_years_of_data.h5
+      md5: fefd5269762efcf3468eed7b23b74948
+      size: 31776
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  plots:
+    cmd: python project/plots.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/tec/preprocessed_tec/
+      md5: 6ff3d809ddabe7c8071da0b906b409ee.dir
+      size: 5313715
+      nfiles: 12
+    params:
+      params.yaml:
+        prepare.dateEnd: 20161231
+        prepare.dateInit: 20120101
+  traingru:
+    cmd: python project/train_with_gru.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - path: data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      md5: 9ea4d54a94d119a3015c291365040205
+      size: 31234800
+    - path: data/prepared/station1_y_trainset_scaled_and_transformed.txt
+      md5: b9c4ffa67b032c22ee093baea04048ab
+      size: 15617400
+    params:
+      params.yaml:
+        train.activation1: tanh
+        train.activation2: tanh
+        train.epochs: 20
+        train.loss: mse
+        train.nFeatures: 2
+        train.optimizer: adam
+        train.validation: 0.1
+        train.verbose: 2
+  evaluategru:
+    cmd: python project/evaluate_with_gru.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+      data/models/gru_model_using_12_years_of_data.h5
+    deps:
+    - path: data/models/gru_model_using_12_years_of_data.h5
+      md5: 4b346325c0019b2054801c4ebef12f32
+      size: 31752
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  traincnn:
+    cmd: python project/train_with_cnn.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - path: data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      md5: 9ea4d54a94d119a3015c291365040205
+      size: 31234800
+    - path: data/prepared/station1_y_trainset_scaled_and_transformed.txt
+      md5: b9c4ffa67b032c22ee093baea04048ab
+      size: 15617400
+    params:
+      params.yaml:
+        train.activation1: tanh
+        train.activation2: tanh
+        train.epochs: 20
+        train.loss: mse
+        train.nFeatures: 2
+        train.optimizer: adam
+        train.validation: 0.1
+        train.verbose: 2
+  evaluatecnn:
+    cmd: python project/evaluate_with_cnn.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+      data/models/cnn_model_using_12_years_of_data.h5
+    deps:
+    - path: data/models/cnn_model_using_12_years_of_data.h5
+      md5: 20d2e92b7b87af1232613b9aeb2e24eb
+      size: 52072
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  evaluate_specific_data_range:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared data/models/cnn_model_using_12_years_of_data.h5
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/models/cnn_model_using_12_years_of_data.h5
+      md5: 20d2e92b7b87af1232613b9aeb2e24eb
+      size: 52072
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        prepare.station: station1
+  naivepersist:
+    cmd: python project/naive.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+    deps:
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  naive:
+    cmd: python project/naive.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+    deps:
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  evaluate_specific_data_range_with_naive_methods:
+    cmd: python project/evaluate_a_model_in_specific_date_range_with_naive_methods.py
+      data/tec/preprocessed_tec/
+    deps:
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        evaluate_specific_date_range.dateEnd: 20171112
+        evaluate_specific_date_range.dateInit: 20171106
+        evaluate_specific_date_range.dateInitNaiveAvg: 20171011
+        prepare.station: station1
+  evaluate_specific_data_range_for_lstm:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared data/models/lstm_model_using_12_years_of_data.h5
+      lstm
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/models/lstm_model_using_12_years_of_data.h5
+      md5: fefd5269762efcf3468eed7b23b74948
+      size: 31776
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        prepare.station: station1
+  evaluate_specific_data_range_for_gru:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared data/models/gru_model_using_12_years_of_data.h5
+      gru
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/models/gru_model_using_12_years_of_data.h5
+      md5: 4b346325c0019b2054801c4ebef12f32
+      size: 31752
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        prepare.station: station1
+  evaluate_specific_data_range_for_cnn:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared data/models/cnn_model_using_12_years_of_data.h5
+      cnn
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/models/cnn_model_using_12_years_of_data.h5
+      md5: 20d2e92b7b87af1232613b9aeb2e24eb
+      size: 52072
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        prepare.station: station1
+  evaluate_one_day_ahead_a_model_in_specific_data_range_with_naive:
+    cmd: python project/evaluate_one_day_ahead_a_model_in_specific_date_range_with_naive_methods.py
+      data/tec/preprocessed_tec/
+    deps:
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        evaluate_specific_date_range.dateEnd: 20161119
+        evaluate_specific_date_range.dateInit: 20161118
+        evaluate_specific_date_range.dateInitNaiveAvg: 20161022
+        prepare.station: station1
+  evaluate_specific_data_range_for_avg_models:
+    cmd: python project/evaluate_a_model_in_specific_date_range_avg_models.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared data/models/ avg_models
+    deps:
+    - path: data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      md5: d1cb615f5740ceb96eeb9120f96b96a6
+      size: 518373
+    - path: data/models/cnn_model_using_12_years_of_data.h5
+      md5: 20d2e92b7b87af1232613b9aeb2e24eb
+      size: 52072
+    - path: data/models/gru_model_using_12_years_of_data.h5
+      md5: 4b346325c0019b2054801c4ebef12f32
+      size: 31752
+    - path: data/models/lstm_model_using_12_years_of_data.h5
+      md5: fefd5269762efcf3468eed7b23b74948
+      size: 31776
+    - path: data/prepared
+      md5: dcdb5521c15b963f18abff2611368326.dir
+      size: 47628141
+      nfiles: 4
+    - path: data/tec/preprocessed_tec/
+      md5: efc1616b096f081aab4ed5bfa7d94fac.dir
+      size: 5740364
+      nfiles: 13
+    params:
+      params.yaml:
+        prepare.station: station1
+  online_training:
+    cmd: python project/online_training.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+      data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - path: data/models/lstm_model_using_12_years_of_data.h5
+      md5: fefd5269762efcf3468eed7b23b74948
+      size: 31776
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212
+  online_training_walking_forward:
+    cmd: python project/online_training_walking_forward.py data/prepared/station1_trainset.txt
+      data/prepared/station1_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - path: data/models/lstm_model_using_12_years_of_data.h5
+      md5: fefd5269762efcf3468eed7b23b74948
+      size: 31776
+    - path: data/prepared/station1_testset.txt
+      md5: d68d17b02b9e10af1d4295f11c7d07ef
+      size: 6729
+    - path: data/prepared/station1_trainset.txt
+      md5: a8af124c42dc0fe67b51242d546ac6f4
+      size: 769212

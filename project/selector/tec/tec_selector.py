@@ -6,6 +6,7 @@ import os, glob
 import re
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 
 def parse_map(tecmap, exponent=-1):
@@ -61,8 +62,91 @@ def build_a_tec_df_from_several_files(folder):
     return df
 
 
+def build_a_tec_df_from_date_range(folder, yearInit, yearEnd):
+    # loop folder
+    fileList = os.listdir(folder)
+    fileList.sort()
+    fileListFiltered = list()
+    # select files of the date range
+    for _year in range(yearInit,yearEnd+1):
+        for _file in fileList:
+            # compare first 4 character of the name file being year
+            if(int(_file[0:4])==_year):
+                fileListFiltered.append(_file)
+    # empty dataframe
+    df = pd.DataFrame()    
+    # build dataframe
+    for _file in fileListFiltered:
+        dfAux = pd.read_csv(folder + '/' + _file, dtype={'DATE':str})
+        df = df.append(dfAux, ignore_index = True)
+    return df
+
+
+def select_data_of_a_tec_dataframe_based_on_date_range_and_station(dfTec, initDate, endDate, station):
+    '''
+        This function implement the selection of a range of data based on
+        a date range an station.
+        ----------
+        input
+        -----
+        dfTec: dataframe
+        yearInit:
+        yearEnd:
+        ddInit:
+        ddEnd:
+        mmInit:
+        mmEnd:
+        station:
+
+        Output
+        ------
+        scaledData: data scaled
+        scaler: scaler fited for data
+    '''
+    # example of tec date format: 363017
+    yyInit = int(str(initDate)[2:4])
+    yyEnd = int(str(endDate)[2:4])
+    mmInit = int(str(initDate)[4:6])
+    mmEnd = int(str(endDate)[4:6])
+    ddInit = int(str(initDate)[6:])
+    ddEnd = int(str(endDate)[6:])
+    # build datetime object
+    date1 = datetime(yyInit, mmInit, ddInit)
+    date2 = datetime(yyEnd, mmEnd, ddEnd)    
+    # doy init and doy end
+    doyInit = date1.timetuple().tm_yday
+    doyEnd = date2.timetuple().tm_yday
+    # year in format yy
+    year = str(yyInit)
+    # empty dataframe
+    dfAux = pd.Series()    
+    # loop doy range
+    for i in range(doyInit, doyEnd+1):
+        # example of tec date format: 363017
+        tecDate = str(i)+'0'+year
+        # tec data has 13 examples per day. Take only 12 (resolution of 2 h.)
+        dfAux = dfAux.append(dfTec.query('DATE == @tecDate').iloc[0:12][station], ignore_index=True)
+    return dfAux
+
+
 def transform_tec_dataframe_in_array_and_select_station(df, station='station1'):
+    '''
+        This function return an array with tec values selected from an station.
+        ----------
+        input
+        -----
+        Output
+        ------
+    '''    
     listAux = list()
+    # note: take only 12 values per day.
+    # originally, tec has 13 values per day in the source files.
+    i = 1
     for index, row in df.iterrows():
-        listAux.append(round(row[station],2))
+        if(i<13):
+            # tec values are stored in columns by station
+            listAux.append(round(row[station],2))
+            i+=1
+        else:
+            i=1
     return np.array(listAux)

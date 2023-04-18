@@ -10,6 +10,7 @@ sources:
 -and-modeling-performance-with-data-scaling/'
 """
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+import numpy as np
 
 def scale_data(data, method='normalization'):
     '''
@@ -35,6 +36,7 @@ def scale_data(data, method='normalization'):
     scaler.fit(data)
     # transform data
     scaledData = scaler.transform(data)
+    scaledData = np.round(scaledData,2)
     # return scaled data and scaler
     return scaledData, scaler
 

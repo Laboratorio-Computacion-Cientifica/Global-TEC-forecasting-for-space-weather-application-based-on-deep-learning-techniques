@@ -2,7 +2,7 @@ prepare:
   dateInit: 20050101 
   dateEnd: 20161231
   shift: 0
-  station: station5
+  station: station1
   nTest: 0.01
   stepsIn: 12
   stepsOut: 12
@@ -18,12 +18,15 @@ train:
   verbose: 2
   batch: 32
 evaluate:
-  lat: -50
-  long: 0
-evaluate_specific_date_range:  
-  dateInit: 20171106
-  dateEnd: 20171112
-  amountOfDays: 6
-  dateInitNaiveAvg: 20171011
-  isTestSet: False
+  lat: -85
+  long: -120
+evaluate_specific_date_range:
+  dateInit: 20161118
+  dateEnd: 20161231
+  amountOfDays: 43
+  dateInitNaiveAvg: 20161023
+  isTestSet: True
   pathSymH: "/home/jorge/Downloads/final_symh_2017_to_2018.csv"
+  #plotTitle1: "Frozen ionosphere method versus actual data on the test set (Nov-Dec 2016)"
+  #plotTitle2: "27-days-avg naive method versus actual data on the test set (Nov-Dec 2016)"
+  #plotTitleForTestSet: "CNN method versus actual data on the test set (Nov-Dec 2016)"

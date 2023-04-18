@@ -34,18 +34,30 @@ def select_kp_data_from_a_date_range(path, initDate, endDate):
     return df.iloc[index1[0]:index2[0]+1]
 
 def transform_kp_dataframe_in_array(df):
+    '''
+        This function select the kp values per row.
+        ----------
+        input
+        -----
+        Output
+        ------
+    '''    
     listAux = list()
     for row in df.itertuples():
-        for i in range(3,16):
+        # init in 3, because itertuples add an index column
+        for i in range(3,15):
             listAux.append(round(row[i],2))
     return array(listAux)
 
 
 '''
+
 path = '/home/jorge/Desktop/Doctorado/work_with_italy/repo_ingv_tec_prediction/data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt'
-initDate = 20050101
+initDate = 20100101
 endDate = 20161231
 
-df = select_data_from_a_date_range(path, initDate, endDate)
-listAux = transform_kp_dataframe_in_list(df)
+df = select_kp_data_from_a_date_range(path, initDate, endDate)
+print(df.shape)
+listAux = transform_kp_dataframe_in_array(df)
+print(len(listAux))
 '''

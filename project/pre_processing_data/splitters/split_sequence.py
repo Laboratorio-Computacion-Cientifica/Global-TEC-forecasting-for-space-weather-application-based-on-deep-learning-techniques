@@ -4,5 +4,9 @@ supervised, in train, test and validation sets.
 
 """
 
-def train_test_split(data, n_test):
-	return data[:-n_test], data[-n_test:]
+def train_test_split(data, n_test, stepsIn):
+    amount = int(n_test*len(data))
+    while(amount%stepsIn):
+        amount -= 1
+    print("this amount", amount)
+    return data[:-amount], data[-amount:], amount

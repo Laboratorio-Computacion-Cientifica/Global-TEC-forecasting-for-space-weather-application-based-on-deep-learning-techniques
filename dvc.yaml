@@ -12,11 +12,11 @@ stages:
     - prepare.dateEnd
     - prepare.dateInit
   train:
-    cmd: python project/train.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
-      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    cmd: python project/train.py data/prepared/station5_x_trainset_scaled_and_transformed.txt
+      data/prepared/station5_y_trainset_scaled_and_transformed.txt model
     deps:
-    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
-    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_y_trainset_scaled_and_transformed.txt
     params:
     - train.activation1
     - train.activation2    
@@ -27,11 +27,11 @@ stages:
     - train.validation
     - train.verbose
   traingru:
-    cmd: python project/train_with_gru.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
-      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    cmd: python project/train_with_gru.py data/prepared/station5_x_trainset_scaled_and_transformed.txt
+      data/prepared/station5_y_trainset_scaled_and_transformed.txt model
     deps:
-    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
-    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_y_trainset_scaled_and_transformed.txt
     params:
     - train.activation1
     - train.activation2    
@@ -42,11 +42,11 @@ stages:
     - train.validation
     - train.verbose
   traincnn:
-    cmd: python project/train_with_cnn.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
-      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    cmd: python project/train_with_cnn.py data/prepared/station5_x_trainset_scaled_and_transformed.txt
+      data/prepared/station5_y_trainset_scaled_and_transformed.txt model
     deps:
-    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
-    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_y_trainset_scaled_and_transformed.txt
     params:
     - train.activation1
     - train.activation2    
@@ -56,23 +56,38 @@ stages:
     - train.optimizer
     - train.validation
     - train.verbose
-  evaluate:
-    cmd: python project/evaluate.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+  train_lstm_for_grid_search:
+    cmd: python project/train_lstm_for_grid_search.py data/prepared/station5_x_trainset_scaled_and_transformed.txt
+      data/prepared/station5_y_trainset_scaled_and_transformed.txt model
     deps:
-    - data/prepared/station1_trainset.txt
-    - data/prepared/station1_testset.txt
+    - data/prepared/station5_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station5_y_trainset_scaled_and_transformed.txt
+    params:
+    - train.activation1
+    - train.activation2    
+    - train.epochs
+    - train.loss
+    - train.nFeatures
+    - train.optimizer
+    - train.validation
+    - train.verbose    
+  evaluate:
+    cmd: python project/evaluate.py data/prepared/station5_trainset.txt data/prepared/station5_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station5_trainset.txt
+    - data/prepared/station5_testset.txt
     - data/models/lstm_model_using_12_years_of_data.h5
   evaluategru:
-    cmd: python project/evaluate_with_gru.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/gru_model_using_12_years_of_data.h5
+    cmd: python project/evaluate_with_gru.py data/prepared/station5_trainset.txt data/prepared/station5_testset.txt data/models/gru_model_using_12_years_of_data.h5
     deps:
-    - data/prepared/station1_trainset.txt
-    - data/prepared/station1_testset.txt
+    - data/prepared/station5_trainset.txt
+    - data/prepared/station5_testset.txt
     - data/models/gru_model_using_12_years_of_data.h5
   evaluatecnn:
-    cmd: python project/evaluate_with_cnn.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/cnn_model_using_12_years_of_data.h5
+    cmd: python project/evaluate_with_cnn.py data/prepared/station5_trainset.txt data/prepared/station5_testset.txt data/models/cnn_model_using_12_years_of_data.h5
     deps:
-    - data/prepared/station1_trainset.txt
-    - data/prepared/station1_testset.txt
+    - data/prepared/station5_trainset.txt
+    - data/prepared/station5_testset.txt
     - data/models/cnn_model_using_12_years_of_data.h5
   plots:
     cmd: python project/plots.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/
@@ -118,11 +133,20 @@ stages:
     - data/models/cnn_model_using_12_years_of_data.h5
     params:
     - prepare.station
-  naive:
-    cmd: python project/naive.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+  evaluate_lstm_specific_data_range_for_lstm_for_grid_search:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/lstm_model_using_12_years_of_data_grid_search_version_20_8_0.1_32.h5 lstm
     deps:
-    - data/prepared/station1_trainset.txt
-    - data/prepared/station1_testset.txt
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/lstm_model_using_12_years_of_data_grid_search_version_20_8_0.1_32.h5
+    params:
+    - prepare.station    
+  naive:
+    cmd: python project/naive.py data/prepared/station5_trainset.txt data/prepared/station5_testset.txt
+    deps:
+    - data/prepared/station5_trainset.txt
+    - data/prepared/station5_testset.txt
   evaluate_specific_data_range_with_naive_methods:
     cmd: python project/evaluate_a_model_in_specific_date_range_with_naive_methods.py data/tec/preprocessed_tec/
     deps:
@@ -169,6 +193,18 @@ stages:
     - evaluate_specific_date_range.dateInit
     - evaluate_specific_date_range.dateEnd
     - evaluate_specific_date_range.dateInitNaiveAvg
+  online_training:
+    cmd: python project/online_training.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+    - data/models/lstm_model_using_12_years_of_data.h5
+  online_training_walking_forward:
+    cmd: python project/online_training_walking_forward.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+    - data/models/lstm_model_using_12_years_of_data.h5
 
 
  # cmd: python 

@@ -16,7 +16,8 @@ from selector.kp.kp_selector import select_kp_data_from_a_date_range
 from selector.kp.kp_selector import transform_kp_dataframe_in_array
 from selector.tec.tec_selector import build_a_tec_df_from_several_files
 from selector.tec.tec_selector import transform_tec_dataframe_in_array_and_select_station
-from pre_processing_data.splitters.multivariate_splitters import sliding_window
+from pre_processing_data.splitters.split_sequence import train_test_split
+
 
 
 ########################################
@@ -47,6 +48,15 @@ print("\nDimension of TEC dataframe: {}".format(dfTec.shape))
 in_seq2 = transform_tec_dataframe_in_array_and_select_station(dfTec, 'station1')
 print("TEC data transformed to array:  {}".format(in_seq2))
 
+#NOTE: kp values are the same for all the stations
+
+########################################
+# scaling and split data data in train, test and validation subsets
+########################################
+n_test = 20
+kpTrainSet, kpTestSet = train_test_split(in_seq1, n_test)
+tecTrainSet, tecTestSet = train_test_split(in_seq2, n_test)
+
 ########################################
 # transform data
 ########################################
@@ -73,15 +83,6 @@ n_features = X.shape[2]
 
 print(X.shape)
 print(y.shape)
-
-########################################
-# scaling and split data data in train, test and validation subsets
-########################################
-
-# ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-
-
-
 
 ########################################
 # keras pipeline
