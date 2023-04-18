@@ -1,0 +1,180 @@
+stages:
+  prepare:
+    cmd: python project/prepare.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+      data/tec/preprocessed_tec/ data/prepared
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - project/prepare.py
+    - project/selector/kp/kp_selector.py
+    - project/selector/tec/tec_selector.py
+    params:
+    - prepare.dateEnd
+    - prepare.dateInit
+  train:
+    cmd: python project/train.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    params:
+    - train.activation1
+    - train.activation2    
+    - train.epochs
+    - train.loss
+    - train.nFeatures
+    - train.optimizer
+    - train.validation
+    - train.verbose
+  traingru:
+    cmd: python project/train_with_gru.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    params:
+    - train.activation1
+    - train.activation2    
+    - train.epochs
+    - train.loss
+    - train.nFeatures
+    - train.optimizer
+    - train.validation
+    - train.verbose
+  traincnn:
+    cmd: python project/train_with_cnn.py data/prepared/station1_x_trainset_scaled_and_transformed.txt
+      data/prepared/station1_y_trainset_scaled_and_transformed.txt model
+    deps:
+    - data/prepared/station1_x_trainset_scaled_and_transformed.txt
+    - data/prepared/station1_y_trainset_scaled_and_transformed.txt
+    params:
+    - train.activation1
+    - train.activation2    
+    - train.epochs
+    - train.loss
+    - train.nFeatures
+    - train.optimizer
+    - train.validation
+    - train.verbose
+  evaluate:
+    cmd: python project/evaluate.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+    - data/models/lstm_model_using_12_years_of_data.h5
+  evaluategru:
+    cmd: python project/evaluate_with_gru.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/gru_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+    - data/models/gru_model_using_12_years_of_data.h5
+  evaluatecnn:
+    cmd: python project/evaluate_with_cnn.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt data/models/cnn_model_using_12_years_of_data.h5
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+    - data/models/cnn_model_using_12_years_of_data.h5
+  plots:
+    cmd: python project/plots.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    params:
+    - prepare.dateEnd
+    - prepare.dateInit
+  evaluate_specific_data_range:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/lstm_model_using_12_years_of_data.h5
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/lstm_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+  evaluate_specific_data_range_for_lstm:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/lstm_model_using_12_years_of_data.h5 lstm
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/lstm_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+  evaluate_specific_data_range_for_gru:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/gru_model_using_12_years_of_data.h5 gru
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/gru_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+  evaluate_specific_data_range_for_cnn:
+    cmd: python project/evaluate_a_model_in_specific_date_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/cnn_model_using_12_years_of_data.h5 cnn
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/cnn_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+  naive:
+    cmd: python project/naive.py data/prepared/station1_trainset.txt data/prepared/station1_testset.txt
+    deps:
+    - data/prepared/station1_trainset.txt
+    - data/prepared/station1_testset.txt
+  evaluate_specific_data_range_with_naive_methods:
+    cmd: python project/evaluate_a_model_in_specific_date_range_with_naive_methods.py data/tec/preprocessed_tec/
+    deps:
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    params:
+    - prepare.station
+    - evaluate_specific_date_range.dateInit
+    - evaluate_specific_date_range.dateEnd
+    - evaluate_specific_date_range.dateInitNaiveAvg
+  evaluate_one_day_ahead_a_model_in_specific_data_range_with_naive:
+    cmd: python project/evaluate_one_day_ahead_a_model_in_specific_date_range_with_naive_methods.py data/tec/preprocessed_tec/
+    deps:
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    params:
+    - prepare.station
+    - evaluate_specific_date_range.dateInit
+    - evaluate_specific_date_range.dateEnd
+    - evaluate_specific_date_range.dateInitNaiveAvg    
+  evaluate_specific_data_range_for_avg_models:
+    cmd: python project/evaluate_a_model_in_specific_date_range_avg_models.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/ avg_models
+    deps:
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/lstm_model_using_12_years_of_data.h5
+    - data/models/gru_model_using_12_years_of_data.h5
+    - data/models/cnn_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+  delta_of_models:
+    cmd: python project/delta_of_models_in_specific_range.py data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt data/tec/preprocessed_tec/ data/prepared data/models/lstm_model_using_12_years_of_data.h5 data/models/gru_model_using_12_years_of_data.h5 data/models/cnn_model_using_12_years_of_data.h5
+    deps:
+    - project/delta_of_models_in_specific_range.py
+    - data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt
+    - data/tec/preprocessed_tec/
+    - data/prepared
+    - data/models/lstm_model_using_12_years_of_data.h5
+    - data/models/gru_model_using_12_years_of_data.h5
+    - data/models/cnn_model_using_12_years_of_data.h5
+    params:
+    - prepare.station
+    - evaluate_specific_date_range.dateInit
+    - evaluate_specific_date_range.dateEnd
+    - evaluate_specific_date_range.dateInitNaiveAvg
+
+
+ # cmd: python 
+ # project/evaluate_a_model_in_specific_date_range.py 
+ # data/kp/preprocessed_kp/kp_index_filtered_taking_into_account_signs_interpolated.txt 
+ # data/tec/preprocessed_tec/ 
+ # data/prepared 
+ # data/models/lstm_model_using_12_years_of_data.h5 lstm
+ 

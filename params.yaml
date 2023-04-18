@@ -1,0 +1,29 @@
+prepare:
+  dateInit: 20050101 
+  dateEnd: 20161231
+  shift: 0
+  station: station5
+  nTest: 0.01
+  stepsIn: 12
+  stepsOut: 12
+  nFeatures: 2
+train:
+  activation1: 'tanh'
+  activation2: 'tanh'
+  optimizer: 'adam'
+  nFeatures: 2
+  validation: 0.1
+  loss: 'mse'
+  epochs: 20
+  verbose: 2
+  batch: 32
+evaluate:
+  lat: -50
+  long: 0
+evaluate_specific_date_range:  
+  dateInit: 20171106
+  dateEnd: 20171112
+  amountOfDays: 6
+  dateInitNaiveAvg: 20171011
+  isTestSet: False
+  pathSymH: "/home/jorge/Downloads/final_symh_2017_to_2018.csv"
