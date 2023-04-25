@@ -17,10 +17,10 @@ The repo covers all the steps of a Machine learning pipeline project:
 ## 🛠 Tools
 During the development of this Python-based project, we use a code tracker and a data tracker. The tools used to cover these two trackers are GitHub, and DVC (Data Version Control) respectively.
 
-## Support
+## 📫 Support
 
 For support, email jnamour@herrera.unt.edu.ar or gmolina@herrera.unt.edu.ar
 
-## License
+## ⚡️ License
 
 [GNU AGPLv3](https://choosealicense.com/licenses/agpl-3.0/)
